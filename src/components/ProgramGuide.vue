@@ -1,21 +1,26 @@
 <template>
   <div class="programguide">
-    <div class="x-header" @scroll="onScrollX" ref="xHeader">
+    <div class="header title-header"></div>
+    <div class="header x-header" @scroll.passive="onScrollX" ref="xHeader">
       <div class="channels">
         <div v-for="channel of channels" class="channel">{{ channel.name }}</div>
       </div>
     </div>
-    <div class="y-header" @scroll="onScrollY" ref="yHeader">
+    <div class="header y-header" @scroll.passive="onScrollY" ref="yHeader">
       <div class="days">
         <div v-for="day of days" class="day">
           <div class="day-label">{{ day.beginTime }}</div>
         </div>
       </div>
     </div>
-    <div class="body" ref="body" @scroll="onScrollXY">
+    <div class="body" ref="body" @scroll.passive="onScrollXY">
       <div class="programs" :style="bodyStyle">
         <div v-for="program of programs" :style="getStyle(program)" class="program">
           <div class="program-name" >{{ program.name }}</div>
+        </div>
+      </div>
+      <div class="dividers" :style="bodyStyle">
+        <div v-for="channel of channels" class="divider">
         </div>
       </div>
     </div>
@@ -124,8 +129,8 @@ export default {
       const d = this.days.find(function (d) { return program.beginTime <= d.beginTime })
       console.debug(d)
       return {
-        top: d.beginTime,
-        height: 100
+        top: this.toYFromTime(d.beginTime),
+        height: this.toYFromTime(d.duration)
       }
     },
     onScrollX (event) {
@@ -140,6 +145,12 @@ export default {
       this.x = event.target.scrollLeft
       this.y = event.target.scrollTop
       console.log(`body: ${this.y}, ${this.x}`)
+    },
+    toYFromTime (time) {
+      return time * 100 / 24
+    },
+    formatTime (time) {
+
     }
   }
 }
@@ -151,7 +162,23 @@ export default {
   position: relative;
   width: 500px;
   height: 500px;
-  background-color: lightblue;
+  background-color: #fafafa;
+  color: #222;
+  overflow: hidden;
+}
+
+.header.title-header {
+  position: absolute;
+  width: 100px;
+  height: 50px;
+  z-index: 2;
+  /* box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23); */
+}
+
+.header {
+  background-color: #2196F3;
+  color: #fafafa;
+  z-index: 1;
 }
 
 .x-header {
@@ -160,8 +187,12 @@ export default {
   left: 100px;
   width: 400px;
   height: 50px;
-  background-color: lightseagreen;
   overflow: auto;
+  box-shadow: 0 3px 6px -6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+
+.x-header::-webkit-scrollbar {
+  display: none;
 }
 
 .channels {
@@ -172,13 +203,12 @@ export default {
 }
 
 .channel {
+  padding: 5px;
   flex-grow: 1;
   min-width: 100px;
   height: 100%;
-  background-color:lightpink;
   box-sizing: border-box;
-  border-left: 0.5px solid red;
-  border-right: 0.5px solid red;
+  border-right: 1px solid #fafafa;
 }
 
 .days {
@@ -189,13 +219,12 @@ export default {
 }
 
 .day {
+  padding: 5px;
   flex-grow: 0;
   width: 100%;
   min-height: 100px;
-  background-color:lightblue;
   box-sizing: border-box;
-  border-top: 1px solid blue;
-  border-bottom: 1px solid blue;
+  border-bottom: 1px solid #fafafa;
 }
 
 .day-label {
@@ -209,8 +238,12 @@ export default {
   left: 0px;
   width: 100px;
   height: 450px;
-  background-color: lightblue;
   overflow: auto;
+  box-shadow: 3px 0 6px -6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+
+.y-header::-webkit-scrollbar {
+  display: none;
 }
 
 .body {
@@ -222,11 +255,35 @@ export default {
   overflow: auto;
 }
 
+.body::-webkit-scrollbar {
+  display: none;
+}
+
 .programs {
+  position: absolute;
 }
 
 .program {
-  background-color: lightgray;
+  padding: 5px;
+  background-color: #ddd;
+  box-sizing: border-box;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
 }
+.x-header {
+  box-shadow: 0 3px 6px -6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+.dividers {
+  position: absolute;
+  display: flex;
+  flex-direction: row;
+}
+
+.divider {
+  border-right: 1px solid #444;
+  box-sizing: border-box;
+  min-width: 100px;
+  height: 100%;
+}
+
 
 </style>
