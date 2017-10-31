@@ -1,19 +1,19 @@
 <template>
   <div class="programguide">
-    <div class="x-header">
-      <div class="channels" ref="xHeader" @scroll="onScrollX">
+    <div class="x-header" @scroll="onScrollX" ref="xHeader">
+      <div class="channels">
         <div v-for="channel of channels" class="channel">{{ channel.name }}</div>
       </div>
     </div>
-    <div class="y-header">
-      <div class="days" ref="yHeader" @scroll="onScrollY">
+    <div class="y-header" @scroll="onScrollY" ref="yHeader">
+      <div class="days">
         <div v-for="day of days" class="day">
           <div class="day-label">{{ day.beginTime }}</div>
         </div>
       </div>
     </div>
-    <div class="body">
-      <div class="programs" ref="body" @scroll="onScrollXY" :style="bodyStyle">
+    <div class="body" ref="body" @scroll="onScrollXY">
+      <div class="programs" :style="bodyStyle">
         <div v-for="program of programs" :style="getStyle(program)" class="program">
           <div class="program-name" >{{ program.name }}</div>
         </div>
@@ -92,9 +92,11 @@ export default {
   watch: {
     x () {
       this.$refs.xHeader.scrollLeft = this.x
+      this.$refs.body.scrollLeft = this.x
     },
     y () {
-
+      this.$refs.yHeader.scrollTop = this.y
+      this.$refs.body.scrollTop = this.y
     }
   },
   methods: {
@@ -137,6 +139,7 @@ export default {
     onScrollXY (event) {
       this.x = event.target.scrollLeft
       this.y = event.target.scrollTop
+      console.log(`body: ${this.y}, ${this.x}`)
     }
   }
 }
@@ -158,6 +161,7 @@ export default {
   width: 400px;
   height: 50px;
   background-color: lightseagreen;
+  overflow: auto;
 }
 
 .channels {
@@ -165,7 +169,6 @@ export default {
   height: 100%;
   display: flex;
   flex-direction: row;
-  overflow: auto;
 }
 
 .channel {
@@ -183,7 +186,6 @@ export default {
   height: 100%;
   display: flex;
   flex-direction: column;
-  overflow: auto;
 }
 
 .day {
@@ -208,6 +210,7 @@ export default {
   width: 100px;
   height: 450px;
   background-color: lightblue;
+  overflow: auto;
 }
 
 .body {
