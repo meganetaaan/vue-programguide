@@ -7,6 +7,10 @@
 </Body>
 ```
 
+* Each day exists per dayDuration from offsetTime
+* Each time exists per timeDuratoin from the beginning of the day
+* day height/ channel width is determined by the actual DOM width/height
+
 ```js
 data () {
   return {

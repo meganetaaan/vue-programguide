@@ -9,7 +9,14 @@
     <div class="header y-header" @scroll.passive="onScrollY" ref="yHeader">
       <div class="days">
         <div v-for="day of days" class="day">
-          <div class="day-label">{{ day.beginTime }}</div>
+          <div class="day-detail">
+            <div class="day-label">{{ day.name }}</div>
+          </div>
+          <div class="times">
+            <div v-for="time of times" class="time">
+              {{ time }}
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -49,6 +56,11 @@ export default {
         duration: 24
       })
     }
+    const times = []
+    for (let i = 0; i < 24; i++) {
+      const label = String(i).padStart(2, '0') + ':00'
+      times.push(label)
+    }
     return {
       x: 0,
       y: 0,
@@ -60,6 +72,7 @@ export default {
       offsetTime: 0,
       channels: channels,
       days: days,
+      times: times,
       programs: [
         {
           id: 'p0',
@@ -77,8 +90,15 @@ export default {
           beginTime: '48',
           duration: '48'
         }
-      ]
+      ],
+      _pxPerDay: 500
     }
+  },
+  mounted () {
+    this.$nextTick(() => {
+      this.bodyWidth = this.$refs.xHeader.getBoundingClientRect().width
+      this.bodyHeight = this.$refs.yHeader.getBoundingClientRect().height
+    })
   },
   computed: {
     bodyStyle () {
@@ -86,12 +106,6 @@ export default {
         width: this.bodyWidth + 'px',
         height: this.bodyHeight + 'px'
       }
-    },
-    bodyWidth () {
-      return this.channels.length * 100
-    },
-    bodyHeight () {
-      return this.days.length * 100
     }
   },
   watch: {
@@ -147,7 +161,7 @@ export default {
       console.log(`body: ${this.y}, ${this.x}`)
     },
     toYFromTime (time) {
-      return time * 100 / 24
+      return time * this._pxPerDay / 24
     },
     formatTime (time) {
 
@@ -160,8 +174,10 @@ export default {
 <style scoped>
 .programguide {
   position: relative;
-  width: 500px;
-  height: 500px;
+  width: 100%;
+  height: 100%;
+  min-width: 200px;
+  min-height: 200px;
   background-color: #fafafa;
   color: #222;
   overflow: hidden;
@@ -185,7 +201,7 @@ export default {
   position: absolute;
   top: 0;
   left: 100px;
-  width: 400px;
+  width: calc(100% - 100px);
   height: 50px;
   overflow: auto;
   box-shadow: 0 3px 6px -6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
@@ -196,7 +212,7 @@ export default {
 }
 
 .channels {
-  width: 100%;
+  width: max-content;
   height: 100%;
   display: flex;
   flex-direction: row;
@@ -211,18 +227,31 @@ export default {
   border-right: 1px solid #fafafa;
 }
 
-.days {
+.times {
   width: 100%;
-  height: 100%;
   display: flex;
   flex-direction: column;
+  flex-grow: 1;
+}
+
+.time {
+  text-align: right;
+  flex-grow: 1;
+  padding: 2px;
+}
+
+.days {
+  display: flex;
+  flex-direction: column;
+  height: max-content;
 }
 
 .day {
-  padding: 5px;
   flex-grow: 0;
+  display: flex;
+  flex-direction: row;
   width: 100%;
-  min-height: 100px;
+  min-height: 500px;
   box-sizing: border-box;
   border-bottom: 1px solid #fafafa;
 }
@@ -237,7 +266,7 @@ export default {
   top: 50px;
   left: 0px;
   width: 100px;
-  height: 450px;
+  height: calc(100% - 50px);
   overflow: auto;
   box-shadow: 3px 0 6px -6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
 }
@@ -250,8 +279,8 @@ export default {
   position: absolute;
   top: 50px;
   left: 100px;
-  width: 400px;
-  height: 450px;
+  width: calc(100% - 100px);
+  height: calc(100% - 50px);
   overflow: auto;
 }
 
