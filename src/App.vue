@@ -6,13 +6,11 @@
 
 <script>
 import ProgramGuide from './components/ProgramGuide'
-import Preview from './components/Preview'
 
 export default {
   name: 'app',
   components: {
-    ProgramGuide,
-    Preview
+    ProgramGuide
   }
 }
 </script>
