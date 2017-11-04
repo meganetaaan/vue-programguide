@@ -1,16 +1,27 @@
 <template>
   <div id="app">
-    <ProgramGuide class="program-guide"/>
+    <ProgramGuide :programs="programs" class="program-guide"/>
   </div>
 </template>
 
 <script>
 import ProgramGuide from './components/ProgramGuide'
+import generateProgram from './generate-program.js'
 
 export default {
   name: 'app',
   components: {
     ProgramGuide
+  },
+  data () {
+    const channels = []
+    for (let i = 1; i < 10; i++) {
+      channels.push('ch' + i)
+    }
+    const programs = generateProgram(0, 60 * 24 * 2, channels)
+    return {
+      programs: programs
+    }
   }
 }
 </script>
