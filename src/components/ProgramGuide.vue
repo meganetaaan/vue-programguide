@@ -79,7 +79,8 @@ export default {
       yHeaderWidth: 100,
       // wanna make it "browser zoom friendly" instead of having its own zoom level
       zoom: {},
-      offsetTime: 0,
+      // no offsetTime in the component itself. a converter is responsible for it.
+      // offsetTime: 0,
       channels: channels,
       channelIndices: channelIndices,
       days: days,
